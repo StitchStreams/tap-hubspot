@@ -459,7 +459,7 @@ def sync_companies(STATE, ctx):
     # Don't bookmark past the start of this sync to account for updated records during the sync.
     new_bookmark = min(max_bk_value, current_sync_start)
     STATE = singer.write_bookmark(STATE, 'companies', bookmark_key, utils.strftime(new_bookmark))
-    STATE = write_current_sync_start(STATE, 'companies', None)
+    STATE = singer.clear_bookmark(STATE, "companies", "current_sync_start")
     singer.write_state(STATE)
     return STATE
 
@@ -768,7 +768,7 @@ def sync_engagements(STATE, ctx):
     # Don't bookmark past the start of this sync to account for updated records during the sync.
     new_bookmark = min(utils.strptime_to_utc(max_bk_value), current_sync_start)
     STATE = singer.write_bookmark(STATE, 'engagements', bookmark_key, utils.strftime(new_bookmark))
-    STATE = write_current_sync_start(STATE, 'engagements', None)
+    STATE = singer.clear_bookmark(STATE, "engagements", "current_sync_start")
     singer.write_state(STATE)
     return STATE
 
