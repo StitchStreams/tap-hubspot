@@ -5,7 +5,7 @@ orbs:
 executors:
   tap_tester:
     docker:
-      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:stitch-tap-tester
+      - image: 218546966473.dkr.ecr.us-east-1.amazonaws.com/circle-ci:stitch-tap-tester-3-11-dev
 jobs:
   ensure_env:
     executor: tap_tester
@@ -17,7 +17,7 @@ jobs:
             aws s3 cp s3://com-stitchdata-dev-deployment-assets/environments/tap-tester/tap_tester_sandbox /usr/local/share/virtualenvs/dev_env.sh
             python3 -m venv /usr/local/share/virtualenvs/tap-hubspot/
             source /usr/local/share/virtualenvs/tap-hubspot/bin/activate
-            pip install -U 'pip<19.2' 'setuptools<51.0.0'
+            pip install -U pip 'setuptools<51.0.0'
             pip install .[dev]
       - persist_to_workspace:
           root: /usr/local/share/virtualenvs/
@@ -37,19 +37,16 @@ jobs:
       - run:
           name: 'pylint'
           command: |
-            source /usr/local/share/virtualenvs/dev_env.sh
             source /usr/local/share/virtualenvs/tap-hubspot/bin/activate
             # BUG https://jira.talendforge.org/browse/TDL-15447
             echo "Disabling the following $PYLINT_DISABLE_LIST"
-            pylint tap_hubspot -d "$PYLINT_DISABLE_LIST"
+            pylint tap_hubspot -d 'broad-except,broad-exception-caught,broad-exception-raised,chained-comparison,empty-docstring,fixme,invalid-name,line-too-long,missing-class-docstring,missing-function-docstring,missing-module-docstring,no-else-raise,no-else-return,too-few-public-methods,too-many-arguments,too-many-branches,too-many-lines,too-many-locals,ungrouped-imports,wrong-spelling-in-comment,wrong-spelling-in-docstring,consider-using-f-string,logging-fstring-interpolation,wrong-import-order,inconsistent-return-statements'
       - run:
           name: 'Unit Tests'
           command: |
             source /usr/local/share/virtualenvs/tap-hubspot/bin/activate
-            nosetests tap_hubspot/tests
-            pip install coverage
-            nosetests --with-coverage --cover-erase --cover-package=tap_hubspot --cover-html-dir=htmlcov tap_hubspot/tests/unittests
-            coverage html
+            pip install nose2 parameterized nose2[coverage_plugin]>=0.6.5
+            nose2 --with-coverage -v -s tap_hubspot/tests/unittests
       - store_test_results:
           path: test_output/report.xml
       - store_artifacts:

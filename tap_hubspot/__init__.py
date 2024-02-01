@@ -1312,7 +1312,7 @@ def load_shared_schema_refs():
 
     shared_schema_refs = {}
     for shared_file in shared_file_names:
-        with open(os.path.join(shared_schemas_path, shared_file)) as data_file:
+        with open(os.path.join(shared_schemas_path, shared_file), encoding='UTF=8') as data_file:
             shared_schema_refs[shared_file] = json.load(data_file)
 
     return shared_schema_refs
