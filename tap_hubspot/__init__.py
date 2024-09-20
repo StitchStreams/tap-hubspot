@@ -538,8 +538,10 @@ def sync_contacts(STATE, ctx):
 
             if not modified_time or modified_time >= start:
                 vids.append(row['vid'])
-                # Adding replication key value in `bookmark_values` dict
-                # Here, key is vid(primary key) and value is replication key value.
+
+            # Adding replication key value in `bookmark_values` dict
+            # Here, key is vid(primary key) and value is replication key value.
+            if modified_time:
                 bookmark_values[row['vid']] = utils.strftime(modified_time)
 
             if modified_time and modified_time >= max_bk_value:
