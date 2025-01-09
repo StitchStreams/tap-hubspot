@@ -1316,7 +1316,20 @@ def get_selected_streams(remaining_streams, ctx):
             selected_streams.append(stream)
     return selected_streams
 
+def deselect_unselected_fields(catalog):
+    """
+    If a field isn't manually deselected, it will be included in the sync by default,
+    so we must explicitly deselect any such fields in the catalog.
+    """
+    for stream in catalog.get('streams'):
+        mdata = stream['metadata']
+        if mdata[0].get('metadata', {}).get('selected'):
+            for breadcrumb in mdata:
+                if breadcrumb.get('breadcrumb') and breadcrumb.get('metadata', {}).get('selected') is None:
+                    breadcrumb['metadata']['selected'] = False
+
 def do_sync(STATE, catalog):
+    deselect_unselected_fields(catalog)
     custom_objects = generate_custom_streams(mode="SYNC", catalog=catalog)
     # Clear out keys that are no longer used
     clean_state(STATE)

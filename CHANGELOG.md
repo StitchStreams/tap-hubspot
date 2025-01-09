@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.2
+  * Explicitly deselect unselected fields [#266](https://github.com/singer-io/tap-hubspot/pull/266)
+  * Fix dependabot issue
+
 ## 3.1.1
   * Replace legacy properties for Contacts and Deals [#265](https://github.com/singer-io/tap-hubspot/pull/265)
 
@@ -20,7 +24,7 @@
 
 ## 2.12.2
   * Use engagements_page_size advanced option [#234](https://github.com/singer-io/tap-hubspot/pull/234)
-  * 
+
 ## 2.12.1
   * Use sync start time for writing bookmarks [#226](https://github.com/singer-io/tap-hubspot/pull/226)
 
